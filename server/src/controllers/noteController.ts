@@ -129,3 +129,32 @@ export const getNote: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteNote: RequestHandler = async (req, res, next) => {
+  const noteId = req.params.noteId;
+  const authenticatedUserId = req.session.userId;
+
+  try {
+    isAssertDefined(authenticatedUserId);
+
+    if (!mongoose.isValidObjectId(noteId)) {
+      throw createHttpError(400, 'Invalid note id');
+    }
+
+    const note = await NoteModel.findById(noteId).exec();
+
+    if (!note) {
+      throw createHttpError(404, 'Note not found');
+    }
+
+    if (!note.userId.equals(authenticatedUserId)) {
+      throw createHttpError(401, 'You cannot access this note');
+    }
+
+    await note.deleteOne();
+
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+};
