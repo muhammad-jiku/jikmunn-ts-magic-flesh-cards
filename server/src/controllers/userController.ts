@@ -110,3 +110,13 @@ export const signIn: RequestHandler<
     next(error);
   }
 };
+
+export const signOut: RequestHandler = (req, res, next) => {
+  req.session.destroy((error) => {
+    if (error) {
+      next(error);
+    } else {
+      res.sendStatus(200);
+    }
+  });
+};
