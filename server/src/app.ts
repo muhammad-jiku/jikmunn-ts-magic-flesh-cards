@@ -50,5 +50,3 @@ app.use('/api/v1/notes', noteRoute);
 app.use((req, res, next) => {
   next(createHttpError(404, 'Endpoint not found'));
 });
-
-export default app;
