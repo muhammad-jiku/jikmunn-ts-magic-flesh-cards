@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Row, Spinner } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
-import { Note as NoteModel } from '../types';
-import * as NotesApi from '../api';
+import { Note as NoteModel } from '../../types';
+import * as NotesApi from '../../api';
 import styles from '../styles/NotesPage.module.css';
 import styleUtils from '../styles/utils.module.css';
 import AddEditNoteDialog from './AddEditNoteDialog';
