@@ -64,6 +64,8 @@ export const signUp: RequestHandler<
     });
 
     req.session.userId = newUser._id;
+    console.log(req.session.userId);
+    console.log(newUser);
 
     res.status(201).json(newUser);
   } catch (error) {

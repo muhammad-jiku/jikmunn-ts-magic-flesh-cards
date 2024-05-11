@@ -1,6 +1,8 @@
 import { ConflictError, UnauthorizedError } from '../errors';
 import { Note, User } from '../types';
 
+const API_URL = `${process.env.REACT_APP__API_URL}/api/v1`;
+
 async function fetchData(input: RequestInfo, init?: RequestInit) {
   const response = await fetch(input, init);
   if (response.ok) {
@@ -24,7 +26,7 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
 }
 
 export async function getLoggedInUser(): Promise<User> {
-  const response = await fetchData('/api/v1/users', { method: 'GET' });
+  const response = await fetchData(`${API_URL}/users`, { method: 'GET' });
   return response.json();
 }
 
@@ -35,7 +37,7 @@ export interface SignUpCredentials {
 }
 
 export async function signUp(credentials: SignUpCredentials): Promise<User> {
-  const response = await fetchData('/api/v1/users/signup', {
+  const response = await fetchData(`${API_URL}/users/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -51,7 +53,7 @@ export interface LoginCredentials {
 }
 
 export async function login(credentials: LoginCredentials): Promise<User> {
-  const response = await fetchData('/api/v1/users/login', {
+  const response = await fetchData(`${API_URL}/users/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -66,7 +68,7 @@ export async function logout() {
 }
 
 export async function fetchNotes(): Promise<Note[]> {
-  const response = await fetchData('/api/v1/notes', { method: 'GET' });
+  const response = await fetchData(`${API_URL}/notes`, { method: 'GET' });
   return response.json();
 }
 
@@ -76,7 +78,7 @@ export interface NoteInput {
 }
 
 export async function createNote(note: NoteInput): Promise<Note> {
-  const response = await fetchData('/api/v1/notes', {
+  const response = await fetchData(`${API_URL}/notes`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -90,7 +92,7 @@ export async function updateNote(
   noteId: string,
   note: NoteInput
 ): Promise<Note> {
-  const response = await fetchData('/api/v1/notes/' + noteId, {
+  const response = await fetchData(`${API_URL}/notes/` + noteId, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -101,5 +103,5 @@ export async function updateNote(
 }
 
 export async function deleteNote(noteId: string) {
-  await fetchData('/api/v1/notes/' + noteId, { method: 'DELETE' });
+  await fetchData(`${API_URL}/notes/` + noteId, { method: 'DELETE' });
 }
