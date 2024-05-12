@@ -11,6 +11,7 @@ config();
 
 export const app = express();
 
+// app.set('trust proxy', 1);
 app.use(cors());
 // app.use(
 //   cors({
@@ -27,8 +28,13 @@ app.use(
     secret: `${process.env.SESSION_SECRET}`,
     resave: false,
     saveUninitialized: false,
+    //  proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
+    // name: 'MyCoolWebAppCookieName', // This needs to be unique per-host.
     cookie: {
       maxAge: 60 * 60 * 1000,
+      secure: true, // required for cookies to work on HTTPS
+      httpOnly: false,
+      sameSite: 'none',
     },
     rolling: true,
     store: MongoStore.create({

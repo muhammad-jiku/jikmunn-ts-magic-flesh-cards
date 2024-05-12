@@ -6,6 +6,7 @@ import {
   getNotes,
   updateNote,
 } from '../controllers/noteController';
+import { requiresAuth } from '../middlewares/Auth';
 
 export const noteRoute = express.Router({
   caseSensitive: true,

@@ -19,23 +19,27 @@ export const createNote: RequestHandler<
   const text = req.body.text;
   const authenticatedUserId = req.session.userId;
 
-  try {
-    isAssertDefined(authenticatedUserId);
+  console.log('req.session for note creation..', req.session);
+  console.log('req.session.userId for note creation', req.session.userId);
+  console.log(title, text, authenticatedUserId);
+  // try {
+  //   isAssertDefined(authenticatedUserId);
 
-    if (!title) {
-      throw createHttpError(400, 'Note must have a title');
-    }
+  //   if (!title) {
+  //     throw createHttpError(400, 'Note must have a title');
+  //   }
 
-    const newNote = await NoteModel.create({
-      userId: authenticatedUserId,
-      title: title,
-      text: text,
-    });
+  //   const newNote = await NoteModel.create({
+  //     userId: authenticatedUserId,
+  //     title: title,
+  //     text: text,
+  //   });
 
-    res.status(201).json(newNote);
-  } catch (error) {
-    next(error);
-  }
+  //   console.log(newNote);
+  //   res.status(201).json(newNote);
+  // } catch (error) {
+  //   next(error);
+  // }
 };
 
 interface UpdateNoteParams {
@@ -57,7 +61,7 @@ export const updateNote: RequestHandler<
   const newTitle = req.body.title;
   const newText = req.body.text;
   const authenticatedUserId = req.session.userId;
-
+  console.log(noteId, newTitle, newText, authenticatedUserId);
   try {
     isAssertDefined(authenticatedUserId);
 
@@ -70,7 +74,7 @@ export const updateNote: RequestHandler<
     }
 
     const note = await NoteModel.findById(noteId).exec();
-
+    console.log(note);
     if (!note) {
       throw createHttpError(404, 'Note not found');
     }
@@ -92,13 +96,15 @@ export const updateNote: RequestHandler<
 
 export const getNotes: RequestHandler = async (req, res, next) => {
   const authenticatedUserId = req.session.userId;
-
+  console.log(authenticatedUserId);
   try {
     isAssertDefined(authenticatedUserId);
 
     const notes = await NoteModel.find({ userId: authenticatedUserId }).exec();
+    console.log(notes);
     res.status(200).json(notes);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

@@ -5,15 +5,18 @@ import createHttpError from 'http-errors';
 
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
   try {
+    console.log('getAuthenticatedUser...', req.session);
     const user = await UserModel.findById(req.session.userId)
       .select('+email')
       .exec();
+    console.log('first user found', user);
     res.status(200).json(user);
   } catch (error) {
     next(error);
   }
 };
 
+// sign up
 interface SignUpBody {
   username?: string;
   email?: string;
@@ -29,6 +32,7 @@ export const signUp: RequestHandler<
   const username = req.body.username;
   const email = req.body.email;
   const passwordRaw = req.body.password;
+  console.log('info', username, email, passwordRaw);
 
   try {
     if (!username || !email || !passwordRaw) {
@@ -38,6 +42,7 @@ export const signUp: RequestHandler<
     const existingUsername = await UserModel.findOne({
       username: username,
     }).exec();
+    console.log('existing username', existingUsername);
 
     if (existingUsername) {
       throw createHttpError(
@@ -47,7 +52,7 @@ export const signUp: RequestHandler<
     }
 
     const existingEmail = await UserModel.findOne({ email: email }).exec();
-
+    console.log('existing email', existingEmail);
     if (existingEmail) {
       throw createHttpError(
         409,
@@ -64,8 +69,8 @@ export const signUp: RequestHandler<
     });
 
     req.session.userId = newUser._id;
-    console.log(req.session.userId);
-    console.log(newUser);
+    console.log('user session id..', req.session.userId);
+    console.log('console new user...', newUser);
 
     res.status(201).json(newUser);
   } catch (error) {
@@ -73,6 +78,7 @@ export const signUp: RequestHandler<
   }
 };
 
+// sign in
 interface SignInBody {
   username?: string;
   password?: string;
@@ -105,17 +111,25 @@ export const signIn: RequestHandler<
     if (!passwordMatch) {
       throw createHttpError(401, 'Invalid credentials');
     }
-
+    console.log(user._id);
+    console.log('..');
     req.session.userId = user._id;
+
+    console.log(req.session);
+    console.log(req.session.userId);
+    console.log('-----------------');
     res.status(201).json(user);
   } catch (error) {
     next(error);
   }
 };
 
+// sign out
 export const signOut: RequestHandler = (req, res, next) => {
+  console.log('sign out session ', req.session);
   req.session.destroy((error) => {
     if (error) {
+      console.log(error);
       next(error);
     } else {
       res.sendStatus(200);

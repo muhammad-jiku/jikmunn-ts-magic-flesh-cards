@@ -53,8 +53,9 @@ export interface LoginCredentials {
 }
 
 export async function login(credentials: LoginCredentials): Promise<User> {
-  const response = await fetchData(`${API_URL}/users/login`, {
+  const response = await fetchData(`${API_URL}/users/signin`, {
     method: 'POST',
+    // credentials: 'include', // Send cookies
     headers: {
       'Content-Type': 'application/json',
     },
@@ -64,7 +65,7 @@ export async function login(credentials: LoginCredentials): Promise<User> {
 }
 
 export async function logout() {
-  await fetchData('/api/v1/users/logout', { method: 'POST' });
+  await fetchData(`${API_URL}/users/signout`, { method: 'POST' });
 }
 
 export async function fetchNotes(): Promise<Note[]> {

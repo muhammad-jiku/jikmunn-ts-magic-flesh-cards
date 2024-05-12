@@ -11,7 +11,7 @@ export const userRoute = express.Router({
   caseSensitive: true,
 });
 
-userRoute.route('/').get(requiresAuth, getAuthenticatedUser);
+userRoute.route('/').get(getAuthenticatedUser);
 userRoute.route('/signup').post(signUp);
 userRoute.route('/signin').post(signIn);
 userRoute.route('/signout').post(signOut);
